@@ -4,9 +4,11 @@ class Redis
 
       COMMAND_DELIMITER = "\r\n"
 
-      def build_command(*args)
+      def build_command(name, *args)
         command = []
-        command << "*#{args.size}"
+        command << "*#{args.size + 1}"
+        command << "$#{string_size name}"
+        command << name
 
         args.each do |arg|
           arg = arg.to_s
@@ -14,8 +16,6 @@ class Redis
           command << arg
         end
 
-        # Trailing delimiter
-        command << ""
         command
       end
 
