@@ -55,8 +55,7 @@ class Redis
       end
 
       def write(command)
-        @sock.write(build_command(*command).join(COMMAND_DELIMITER))
-        @sock.write(COMMAND_DELIMITER)
+        @sock.syswrite(build_command(*command).join(COMMAND_DELIMITER))
       end
 
       def read
