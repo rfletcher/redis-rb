@@ -54,9 +54,15 @@ class Redis
         end
       end
 
-      def write(command)
-        @sock.syswrite(build_command(*command).join(COMMAND_DELIMITER))
-      end
+    def write(command)
+      command = build_command(*command).join(COMMAND_DELIMITER)
+
+      size = command.size
+      written = 0
+      begin
+        written = written + @sock.syswrite(command[written,size - written])
+      end while written < size
+    end
 
       def read
         # We read the first byte using read() mainly because gets() is
